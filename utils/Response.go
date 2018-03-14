@@ -32,7 +32,7 @@ func (response *Response)Success(data string) (res string) {
 	response.Status = Success
 	response.Version = 0
 	response.Message = "OK"
-	response.Data = data
+	response.Data = fmt.Sprintf(`"%s"`, data)
 	res = response.ToJsonString()
 	return res
 }

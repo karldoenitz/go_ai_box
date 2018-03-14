@@ -9,12 +9,15 @@ import (
 	"net/http"
 )
 
+//校验http请求的参数是否合法
+//
 func IsParamsValid(request *http.Request) (result bool, msg string) {
 	request.ParseForm()
 	token := request.Form.Get("token")
 	level := request.Form.Get("level")
 	signTime := request.Form.Get("signTime")
 	deviceId := request.Form.Get("deviceId")
+	platform := request.Form.Get("ptf")
 	if token == "" || level == "" || signTime == "" || deviceId == "" {
 		return false, "not enough token"
 	}
@@ -23,7 +26,7 @@ func IsParamsValid(request *http.Request) (result bool, msg string) {
 	if int64(signTimeInt) > now || now - int64(signTimeInt) > 60 * 30 {
 		return false, "signTime expired or invalid"
 	}
-	paramsInput := deviceId + signTime + level
+	paramsInput := deviceId + signTime + level + platform
 	w := md5.New()
 	io.WriteString(w, paramsInput)
 	md5str2 := fmt.Sprintf("%x", w.Sum(nil))
