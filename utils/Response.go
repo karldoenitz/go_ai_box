@@ -32,16 +32,20 @@ func (response *Response)Success(data string) (res string) {
 	response.Status = Success
 	response.Version = 0
 	response.Message = "OK"
-	response.Data = fmt.Sprintf(`"%s"`, data)
+	if data != "" {
+		response.Data = fmt.Sprintf(`%s`, data)
+	} else {
+		response.Data = `""`
+	}
 	res = response.ToJsonString()
 	return res
 }
 
 // 参数校验失败
-func (response *Response)ParamInvalid() (res string) {
+func (response *Response)ParamInvalid(errInfo string) (res string) {
 	response.Status = ParamInvalid
 	response.Version = 0
-	response.Message = "Params Invalid"
+	response.Message = errInfo
 	response.Data = `""`
 	res = response.ToJsonString()
 	return res
