@@ -20,15 +20,16 @@ func RedisFactory() (client *redis.Client, err error) {
 }
 
 func main()  {
-	fmt.Printf("redis connectting ...")
+	fmt.Printf("redis connectting ...\n")
 	client, redisClientErr := RedisFactory()
 	if redisClientErr != nil {
 		fmt.Printf("redis connect failed: %s", client)
 		return
 	}
 	global.RedisClient = client
-	fmt.Printf("Server is running ...")
+	fmt.Printf("Server is running ...\n")
 	http.HandleFunc("/lean/home", handlers.HomeHandler)
+	http.HandleFunc("/lean/detail", handlers.DetailHandler)
 	httpServerErr := http.ListenAndServe("127.0.0.1:8908", nil)
 	if httpServerErr != nil {
 		fmt.Printf("error is: %s", httpServerErr)
