@@ -2,11 +2,11 @@ package main
 
 import (
 	"net/http"
-	"fmt"
 	"github.com/go-redis/redis"
 	"../handlers"
 	"../utils"
 	"../global"
+	"../logger"
 )
 
 func RedisFactory() (client *redis.Client, err error) {
@@ -20,18 +20,20 @@ func RedisFactory() (client *redis.Client, err error) {
 }
 
 func main()  {
-	fmt.Printf("redis connectting ...\n")
+	logger.Info.Printf("redis connectting ...\n")
 	client, redisClientErr := RedisFactory()
 	if redisClientErr != nil {
-		fmt.Printf("redis connect failed: %s", client)
+		logger.Error.Printf("redis connect failed: %s", client)
 		return
 	}
 	global.RedisClient = client
-	fmt.Printf("Server is running ...\n")
+	logger.Info.Printf("Server is running ...\n")
+	// url配置
 	http.HandleFunc("/lean/home", handlers.HomeHandler)
 	http.HandleFunc("/lean/detail", handlers.DetailHandler)
-	httpServerErr := http.ListenAndServe("127.0.0.1:8908", nil)
+	// 端口监听
+	httpServerErr := http.ListenAndServe(utils.ServerIPPort, nil)
 	if httpServerErr != nil {
-		fmt.Printf("error is: %s", httpServerErr)
+		logger.Error.Printf("error is: %s", httpServerErr)
 	}
 }
