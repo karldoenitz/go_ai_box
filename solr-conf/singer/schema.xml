@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<schema name="singer" version="1.2">
+  <fields>
+    <!-- name: 名称 type: 类型 indexed: 是否是索引 required: 是否必须 multiValued: 是否多值，如果设定为true，就会以list/array形式显示 -->
+    <field name="id" type="int" indexed="true" required="true" multiValued="false"/>
+    <field name="name" type="string" indexed="true" required="true" multiValued="false"/>
+    <field name="music" type="string" indexed="true" required="true" multiValued="true"/>
+    <field name="searchWord" type="string" indexed="true" required="true" multiValued="true"/>
+    <field name="playbill" type="string" indexed="false" required="false" multiValued="true"/>
+  </fields>
+  <types>
+    <!-- 这里配置的是上方fields中的type与solr中的类型的映射关系 -->
+    <!-- name: 类型名 class: solr中的类型 sortMissingLast/sortMissingFirst: 是否在排序时将值为空的记录排在最后/最前 -->
+    <!-- precisionStep: 误差范围 omitNorms: 是否忽略存储规范 positionIncrementGap: 当multiValued值为true时有效，用在字符短语，区分短语之间的间隔距离 -->
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true" omitNorms="true"/>    
+    <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true" omitNorms="true"/>    
+    <fieldtype name="binary" class="solr.BinaryField"/>    
+    <fieldType name="int" class="solr.TrieIntField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>    
+    <fieldType name="float" class="solr.TrieFloatField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>    
+    <fieldType name="long" class="solr.TrieLongField" precisionStep="0" omitNorms="true" positionIncrementGap="0"/>    
+    <fieldType name="double" class="solr.TrieDoubleField" precisionStep="0" omitNorms="true"/>
+  </types>
+</schema>
