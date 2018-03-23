@@ -58,6 +58,10 @@ func main()  {
 	// url配置
 	http.HandleFunc("/lean/home", handlers.HomeHandler)
 	http.HandleFunc("/lean/detail", handlers.DetailHandler)
+	http.HandleFunc("/service/search", handlers.SearchHandler)
+	http.HandleFunc("/source/music", handlers.MusicHandler)
+	http.HandleFunc("/source/singer", handlers.SingerHandler)
+	http.HandleFunc("/source/playbill", handlers.PlaybillHandler)
 	// 端口监听
 	httpServerErr := http.ListenAndServe(utils.ServerIPPort, nil)
 	if httpServerErr != nil {
