@@ -15,7 +15,7 @@ type Playbill struct {
 	music []int64
 }
 
-type Player struct {
+type Singer struct {
 	id int64
 	name string
 	searchWorld []string
