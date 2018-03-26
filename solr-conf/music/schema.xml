@@ -4,7 +4,7 @@
     <!-- name: 名称 type: 类型 indexed: 是否是索引 required: 是否必须 multiValued: 是否多值，如果设定为true，就会以list/array形式显示 -->
     <field name="id" type="int" indexed="true" required="true" multiValued="false"/>
     <field name="name" type="string" indexed="true" required="true" multiValued="false"/>
-    <field name="singer" type="string" indexed="true" required="true" multiValued="true"/>
+    <field name="singer" type="int" indexed="true" required="true" multiValued="true"/>
     <field name="searchWord" type="string" indexed="true" required="true" multiValued="true"/>
     <field name="url" type="string" indexed="false" required="false" multiValued="false"/>
   </fields>
