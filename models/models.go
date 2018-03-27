@@ -141,8 +141,8 @@ func GetMusicById(id int) (result []Music) {
 	return result
 }
 
-func GetSingerById(id int) (result []Music) {
-	solrMusicConn := global.SolrClientSinger
+func GetSingerById(id int) (result []Singer) {
+	solrSingerConn := global.SolrClientSinger
 	fq := fmt.Sprintf("id:%d", id)
 	q := solr.Query{
 		Params: solr.URLParamMap{
@@ -156,7 +156,7 @@ func GetSingerById(id int) (result []Music) {
 	}
 	queryString := q.String()
 	fmt.Println(queryString)
-	res, selectErr := solrMusicConn.Select(&q)
+	res, selectErr := solrSingerConn.Select(&q)
 	if selectErr != nil {
 		logger.Error.Printf("select ERROR in model.go line 159: %s", selectErr.Error())
 		panic(selectErr)
@@ -166,31 +166,35 @@ func GetSingerById(id int) (result []Music) {
 		collection := solrResults.Collection[i]
 		id := int64(collection.Fields["id"].(float64))
 		name := collection.Fields["name"].(string)
-		url := collection.Fields["url"].(string)
-		singerInterface := collection.Fields["singer"].([]interface{})
+		playbillInterface := collection.Fields["playbill"].([]interface{})
+		musicInterface := collection.Fields["music"].([]interface{})
 		searchWordInterface := collection.Fields["searchWord"].([]interface{})
-		singer := make([]int64, len(singerInterface))
-		for i := range singerInterface {
-			singer[i] = int64(singerInterface[i].(float64))
+		playbill := make([]int64, len(playbillInterface))
+		for i := range playbillInterface {
+			playbill[i] = int64(playbillInterface[i].(float64))
+		}
+		music := make([]int64, len(musicInterface))
+		for i := range musicInterface {
+			music[i] = int64(musicInterface[i].(float64))
 		}
 		searchWord := make([]string, len(searchWordInterface))
 		for i := range searchWordInterface {
 			searchWord[i] = searchWordInterface[i].(string)
 		}
-		musicObj := Music{
+		singerObj := Singer{
 			Id: id,
 			Name: name,
-			Url: url,
-			Singer: singer,
+			Playbill: playbill,
+			Music: music,
 			SearchWorld: searchWord,
 		}
-		result = append(result, musicObj)
+		result = append(result, singerObj)
 	}
 	return result
 }
 
-func GetPlaybillById(id int) (result []Music) {
-	solrMusicConn := global.SolrClientMusic
+func GetPlaybillById(id int) (result []Playbill) {
+	solrPlaybillConn := global.SolrClientPlaybill
 	fq := fmt.Sprintf("id:%d", id)
 	q := solr.Query{
 		Params: solr.URLParamMap{
@@ -204,9 +208,9 @@ func GetPlaybillById(id int) (result []Music) {
 	}
 	queryString := q.String()
 	fmt.Println(queryString)
-	res, selectErr := solrMusicConn.Select(&q)
+	res, selectErr := solrPlaybillConn.Select(&q)
 	if selectErr != nil {
-		logger.Error.Printf("select ERROR in model.go line 63: %s", selectErr.Error())
+		logger.Error.Printf("select ERROR in model.go line 211: %s", selectErr.Error())
 		panic(selectErr)
 	}
 	solrResults := res.Results
@@ -214,22 +218,20 @@ func GetPlaybillById(id int) (result []Music) {
 		collection := solrResults.Collection[i]
 		id := int64(collection.Fields["id"].(float64))
 		name := collection.Fields["name"].(string)
-		url := collection.Fields["url"].(string)
-		singerInterface := collection.Fields["singer"].([]interface{})
+		musicInterface := collection.Fields["music"].([]interface{})
 		searchWordInterface := collection.Fields["searchWord"].([]interface{})
-		singer := make([]int64, len(singerInterface))
-		for i := range singerInterface {
-			singer[i] = int64(singerInterface[i].(float64))
+		music := make([]int64, len(musicInterface))
+		for i := range musicInterface {
+			music[i] = int64(musicInterface[i].(float64))
 		}
 		searchWord := make([]string, len(searchWordInterface))
 		for i := range searchWordInterface {
 			searchWord[i] = searchWordInterface[i].(string)
 		}
-		musicObj := Music{
+		musicObj := Playbill{
 			Id: id,
 			Name: name,
-			Url: url,
-			Singer: singer,
+			Music: music,
 			SearchWorld: searchWord,
 		}
 		result = append(result, musicObj)
