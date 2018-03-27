@@ -27,6 +27,7 @@ func HomeHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 		fmt.Fprintf(responseWriter, response.ServerError(redisErr.Error()))
 		return
 	}
+	responseWriter.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(responseWriter, response.Success(result))
 }
 
@@ -49,5 +50,6 @@ func DetailHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 		fmt.Fprintf(responseWriter, response.ServerError(redisErr.Error()))
 		return
 	}
+	responseWriter.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(responseWriter, response.Success(result))
 }

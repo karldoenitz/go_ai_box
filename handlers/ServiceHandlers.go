@@ -30,5 +30,6 @@ func SearchHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 		logger.Error.Println("marshal musicData to json Error, on ServiceHandlers.go line 29: %s", jsonErr.Error())
 		panic(jsonErr)
 	}
+	responseWriter.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(responseWriter, response.Success(string(jsonResult)))
 }

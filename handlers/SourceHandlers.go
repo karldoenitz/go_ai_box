@@ -38,6 +38,7 @@ func MusicHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 		logger.Error.Println("marshal musicData to json Error, on ServiceHandlers.go line 36: %s", jsonErr.Error())
 		panic(jsonErr)
 	}
+	responseWriter.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(responseWriter, response.Success(string(jsonResult)))
 }
 
@@ -69,6 +70,7 @@ func PlaybillHandler(responseWriter http.ResponseWriter, request *http.Request) 
 		logger.Error.Println("marshal musicData to json Error, on ServiceHandlers.go line 67: %s", jsonErr.Error())
 		panic(jsonErr)
 	}
+	responseWriter.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(responseWriter, response.Success(string(jsonResult)))
 }
 
@@ -100,5 +102,6 @@ func SingerHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 		logger.Error.Println("marshal musicData to json Error, on ServiceHandlers.go line 67: %s", jsonErr.Error())
 		panic(jsonErr)
 	}
+	responseWriter.Header().Set("Content-Type", "application/json")
 	fmt.Fprintf(responseWriter, response.Success(string(jsonResult)))
 }
