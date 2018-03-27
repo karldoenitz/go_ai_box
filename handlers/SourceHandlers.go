@@ -22,7 +22,12 @@ func MusicHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 	}
 	// 此处是业务逻辑
 	id := request.Form.Get("id")
-	musicId, _ := strconv.Atoi(id)
+	musicId, convertErr := strconv.Atoi(id)
+	if convertErr != nil {
+		logger.Warning.Println(response.ParamInvalid(convertErr.Error()))
+		fmt.Fprintf(responseWriter, response.ParamInvalid(convertErr.Error()))
+		return
+	}
 	musicSearchResults := models.GetMusicById(musicId)
 	musicData := models.MusicData{
 		Data: musicSearchResults,
@@ -30,7 +35,7 @@ func MusicHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 	}
 	jsonResult, jsonErr := json.Marshal(musicData)
 	if jsonErr != nil {
-		logger.Error.Println("marshal musicData to json Error, on ServiceHandlers.go line 31: %s", jsonErr.Error())
+		logger.Error.Println("marshal musicData to json Error, on ServiceHandlers.go line 36: %s", jsonErr.Error())
 		panic(jsonErr)
 	}
 	fmt.Fprintf(responseWriter, response.Success(string(jsonResult)))
@@ -47,6 +52,24 @@ func PlaybillHandler(responseWriter http.ResponseWriter, request *http.Request) 
 		return
 	}
 	// 此处是业务逻辑
+	id := request.Form.Get("id")
+	playbillId, convertErr := strconv.Atoi(id)
+	if convertErr != nil {
+		logger.Warning.Println(response.ParamInvalid(convertErr.Error()))
+		fmt.Fprintf(responseWriter, response.ParamInvalid(convertErr.Error()))
+		return
+	}
+	playbillSearchResults := models.GetPlaybillById(playbillId)
+	playbillData := models.PlaybillData{
+		Data: playbillSearchResults,
+		Length: len(playbillSearchResults),
+	}
+	jsonResult, jsonErr := json.Marshal(playbillData)
+	if jsonErr != nil {
+		logger.Error.Println("marshal musicData to json Error, on ServiceHandlers.go line 67: %s", jsonErr.Error())
+		panic(jsonErr)
+	}
+	fmt.Fprintf(responseWriter, response.Success(string(jsonResult)))
 }
 
 // 歌手查询接口，从solr中查询Singer数据
