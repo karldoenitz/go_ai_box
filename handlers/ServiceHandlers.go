@@ -13,10 +13,8 @@ import (
 func SearchHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 	logger.Info.Printf("%s %s", request.Method, request.URL)
 	isValid, err := utils.IsParamsValid(request)
-	response := utils.Response{}
 	if !isValid {
-		logger.Warning.Println(response.ParamInvalid(err))
-		fmt.Fprintf(responseWriter, response.ParamInvalid(err))
+		ResponseParamInvalid(responseWriter, err)
 		return
 	}
 	searchWord := request.Form.Get("searchWord")
@@ -27,9 +25,7 @@ func SearchHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 	}
 	jsonResult, jsonErr := json.Marshal(musicData)
 	if jsonErr != nil {
-		logger.Error.Println("marshal musicData to json Error, on ServiceHandlers.go line 29: %s", jsonErr.Error())
-		panic(jsonErr)
+		ResponseServerErr(responseWriter, jsonErr.Error())
 	}
-	responseWriter.Header().Set("Content-Type", "application/json")
-	fmt.Fprintf(responseWriter, response.Success(string(jsonResult)))
+	ResponseAsJson(responseWriter, string(jsonResult))
 }
