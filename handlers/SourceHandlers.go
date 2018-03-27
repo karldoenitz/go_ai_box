@@ -83,4 +83,22 @@ func SingerHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 		return
 	}
 	// 此处是业务逻辑
+	id := request.Form.Get("id")
+	singerId, convertErr := strconv.Atoi(id)
+	if convertErr != nil {
+		logger.Warning.Println(response.ParamInvalid(convertErr.Error()))
+		fmt.Fprintf(responseWriter, response.ParamInvalid(convertErr.Error()))
+		return
+	}
+	singerSearchResults := models.GetSingerById(singerId)
+	singerData := models.SingerData{
+		Data: singerSearchResults,
+		Length: len(singerSearchResults),
+	}
+	jsonResult, jsonErr := json.Marshal(singerData)
+	if jsonErr != nil {
+		logger.Error.Println("marshal musicData to json Error, on ServiceHandlers.go line 67: %s", jsonErr.Error())
+		panic(jsonErr)
+	}
+	fmt.Fprintf(responseWriter, response.Success(string(jsonResult)))
 }
