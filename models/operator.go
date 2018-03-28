@@ -7,6 +7,7 @@ import (
 	"../logger"
 )
 
+//获取solr查询语句
 func getSolrQuery(fq string) (q solr.Query) {
 	q = solr.Query{
 		Params: solr.URLParamMap{
@@ -21,6 +22,7 @@ func getSolrQuery(fq string) (q solr.Query) {
 	return q
 }
 
+//根据solr链接及solr查询语句查询结果
 func getSolrQueryResult(conn *solr.Connection, fq string) (result *solr.DocumentCollection) {
 	q := getSolrQuery(fq)
 	queryString := q.String()
@@ -34,6 +36,8 @@ func getSolrQueryResult(conn *solr.Connection, fq string) (result *solr.Document
 	return solrResults
 }
 
+//根据音乐名称获取音乐model数据
+//返回值为音乐model类型的数组
 func GetMusicByName(name string) (result []Music) {
 	solrMusicConn := global.SolrClientMusic
 	fq := fmt.Sprintf("name:%s", name)
@@ -65,6 +69,8 @@ func GetMusicByName(name string) (result []Music) {
 	return result
 }
 
+//根据音乐id获取音乐model数据
+//返回值为音乐model类型的数组
 func GetMusicById(id int) (result []Music) {
 	solrMusicConn := global.SolrClientMusic
 	fq := fmt.Sprintf("id:%d", id)
@@ -96,6 +102,8 @@ func GetMusicById(id int) (result []Music) {
 	return result
 }
 
+//根据id获取歌手model数据
+//返回值为歌手model类型的数组
 func GetSingerById(id int) (result []Singer) {
 	solrSingerConn := global.SolrClientSinger
 	fq := fmt.Sprintf("id:%d", id)
@@ -131,6 +139,8 @@ func GetSingerById(id int) (result []Singer) {
 	return result
 }
 
+//根据id获取播单model数据
+//返回值为播单model类型的数组
 func GetPlaybillById(id int) (result []Playbill) {
 	solrPlaybillConn := global.SolrClientPlaybill
 	fq := fmt.Sprintf("id:%d", id)
