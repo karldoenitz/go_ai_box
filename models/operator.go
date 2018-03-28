@@ -7,10 +7,8 @@ import (
 	"../logger"
 )
 
-func GetMusicByName(name string) (result []Music) {
-	solrMusicConn := global.SolrClientMusic
-	fq := fmt.Sprintf("name:%s", name)
-	q := solr.Query{
+func getSolrQuery(fq string) (q solr.Query) {
+	q = solr.Query{
 		Params: solr.URLParamMap{
 			"q": []string{"*:*"},
 			"fq": []string{fq},
@@ -20,14 +18,26 @@ func GetMusicByName(name string) (result []Music) {
 		Rows: 10,
 		Sort: "id+ASC",
 	}
+	return q
+}
+
+func getSolrQueryResult(conn *solr.Connection, fq string) (result *solr.DocumentCollection) {
+	q := getSolrQuery(fq)
 	queryString := q.String()
-	fmt.Println(queryString)
-	res, selectErr := solrMusicConn.Select(&q)
+	logger.Info.Println(queryString)
+	res, selectErr := conn.Select(&q)
 	if selectErr != nil {
-		logger.Error.Printf("select ERROR in model.go line 63: %s", selectErr.Error())
+		logger.Error.Printf("solr query ERROR: %s", selectErr.Error())
 		panic(selectErr)
 	}
 	solrResults := res.Results
+	return solrResults
+}
+
+func GetMusicByName(name string) (result []Music) {
+	solrMusicConn := global.SolrClientMusic
+	fq := fmt.Sprintf("name:%s", name)
+	solrResults := getSolrQueryResult(solrMusicConn, fq)
 	for i := 0; i < solrResults.NumFound; i++ {
 		collection := solrResults.Collection[i]
 		id := int64(collection.Fields["id"].(float64))
@@ -58,24 +68,7 @@ func GetMusicByName(name string) (result []Music) {
 func GetMusicById(id int) (result []Music) {
 	solrMusicConn := global.SolrClientMusic
 	fq := fmt.Sprintf("id:%d", id)
-	q := solr.Query{
-		Params: solr.URLParamMap{
-			"q": []string{"*:*"},
-			"fq": []string{fq},
-			"wt": []string{"json"},
-			"fl": []string{"*"},
-		},
-		Rows: 10,
-		Sort: "id+ASC",
-	}
-	queryString := q.String()
-	fmt.Println(queryString)
-	res, selectErr := solrMusicConn.Select(&q)
-	if selectErr != nil {
-		logger.Error.Printf("select ERROR in model.go line 111: %s", selectErr.Error())
-		panic(selectErr)
-	}
-	solrResults := res.Results
+	solrResults := getSolrQueryResult(solrMusicConn, fq)
 	for i := 0; i < solrResults.NumFound; i++ {
 		collection := solrResults.Collection[i]
 		id := int64(collection.Fields["id"].(float64))
@@ -106,24 +99,7 @@ func GetMusicById(id int) (result []Music) {
 func GetSingerById(id int) (result []Singer) {
 	solrSingerConn := global.SolrClientSinger
 	fq := fmt.Sprintf("id:%d", id)
-	q := solr.Query{
-		Params: solr.URLParamMap{
-			"q": []string{"*:*"},
-			"fq": []string{fq},
-			"wt": []string{"json"},
-			"fl": []string{"*"},
-		},
-		Rows: 10,
-		Sort: "id+ASC",
-	}
-	queryString := q.String()
-	fmt.Println(queryString)
-	res, selectErr := solrSingerConn.Select(&q)
-	if selectErr != nil {
-		logger.Error.Printf("select ERROR in model.go line 159: %s", selectErr.Error())
-		panic(selectErr)
-	}
-	solrResults := res.Results
+	solrResults := getSolrQueryResult(solrSingerConn, fq)
 	for i := 0; i < solrResults.NumFound; i++ {
 		collection := solrResults.Collection[i]
 		id := int64(collection.Fields["id"].(float64))
@@ -158,24 +134,7 @@ func GetSingerById(id int) (result []Singer) {
 func GetPlaybillById(id int) (result []Playbill) {
 	solrPlaybillConn := global.SolrClientPlaybill
 	fq := fmt.Sprintf("id:%d", id)
-	q := solr.Query{
-		Params: solr.URLParamMap{
-			"q": []string{"*:*"},
-			"fq": []string{fq},
-			"wt": []string{"json"},
-			"fl": []string{"*"},
-		},
-		Rows: 10,
-		Sort: "id+ASC",
-	}
-	queryString := q.String()
-	fmt.Println(queryString)
-	res, selectErr := solrPlaybillConn.Select(&q)
-	if selectErr != nil {
-		logger.Error.Printf("select ERROR in model.go line 211: %s", selectErr.Error())
-		panic(selectErr)
-	}
-	solrResults := res.Results
+	solrResults := getSolrQueryResult(solrPlaybillConn, fq)
 	for i := 0; i < solrResults.NumFound; i++ {
 		collection := solrResults.Collection[i]
 		id := int64(collection.Fields["id"].(float64))
