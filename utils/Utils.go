@@ -10,7 +10,7 @@ import (
 )
 
 //校验http请求的参数是否合法
-//
+//并返回校验信息
 func IsParamsValid(request *http.Request) (result bool, msg string) {
 	request.ParseForm()
 	token := request.Form.Get("token")
