@@ -7,7 +7,8 @@ import (
 	"../logger"
 )
 
-//获取solr查询语句
+// 获取solr查询语句
+// 初始化并返回一个solr查询Query实例
 func getSolrQuery(fq string) (q solr.Query) {
 	q = solr.Query{
 		Params: solr.URLParamMap{
@@ -22,7 +23,8 @@ func getSolrQuery(fq string) (q solr.Query) {
 	return q
 }
 
-//根据solr链接及solr查询语句查询结果
+// 根据solr链接及solr查询语句查询结果
+// 失败则抛出异常
 func getSolrQueryResult(conn *solr.Connection, fq string) (result *solr.DocumentCollection) {
 	q := getSolrQuery(fq)
 	queryString := q.String()
@@ -36,8 +38,8 @@ func getSolrQueryResult(conn *solr.Connection, fq string) (result *solr.Document
 	return solrResults
 }
 
-//根据音乐名称获取音乐model数据
-//返回值为音乐model类型的数组
+// 根据音乐名称获取音乐model数据
+// 返回值为音乐model类型的数组
 func GetMusicByName(name string) (result []Music) {
 	solrMusicConn := global.SolrClientMusic
 	fq := fmt.Sprintf("name:%s", name)

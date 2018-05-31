@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"encoding/json"
 	"../logger"
@@ -10,6 +9,7 @@ import (
 )
 
 // 查询接口，从solr中查询数据
+// 根据客户端传的searchWord参数，到solr中进行相关查询，然后将数据返回给客户端
 func SearchHandler(responseWriter http.ResponseWriter, request *http.Request)  {
 	logger.Info.Printf("%s %s", request.Method, request.URL)
 	isValid, err := utils.IsParamsValid(request)
