@@ -10,6 +10,8 @@ import (
 	"../logger"
 )
 
+// 初始化redis数据工厂
+// 失败则返回的err不为nil
 func RedisFactory() (client *redis.Client, err error) {
 	client = redis.NewClient(&redis.Options{
 		Addr:       utils.RedisServer,
@@ -20,6 +22,8 @@ func RedisFactory() (client *redis.Client, err error) {
 	return client, err
 }
 
+// 初始化solr数据工厂
+// 若失败则返回err
 func SolrFactory() (err error) {
 	musicCore, musicErr := solr.Init(utils.SolrHost, utils.SolrPort, utils.SolrMusicCore)
 	if musicErr != nil {
