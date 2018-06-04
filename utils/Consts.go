@@ -7,7 +7,7 @@ const DetailKey = "detail:%s:%s"
 // redis配置
 const RedisServer = "localhost:6379"
 const DB = 0
-const RedisPwd = ""
+const RedisPwd = "pwd"
 
 // solr配置
 const SolrHost = "127.0.0.1"
